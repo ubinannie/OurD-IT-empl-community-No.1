@@ -20,3 +20,5 @@
 - 송찬기 : 댓글 / 대댓글
 - 정대현 : 포트폴리오 게시판
 - 신호선 : TIP게시판 / 관리자 게시판
+- PPT -> ISSUES에 첨부
+- https://github.com/ubinannie/OurD-IT-empl-community-/issues/1
