@@ -1,0 +1,68 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.psw'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+// 이부분은 Spring에서 pom.xml이라고 생각하면 편함
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// 여기서부터 stomp에 관련된 라이브러리 추가
+	// webjar : 채팅 웹 화면을 구현하기 위해 필요한 js를 선언하기 위해 선언
+	// freemarker,vue.js를 사용하여 개발한 것
+	// sockjs : websocket을 지원하지 않는 낮은 브라우저에서도 사용할 수 있게 해주는 라이브러리
+	implementation 'org.webjars.bower:bootstrap:4.3.1'
+    implementation 'org.webjars.bower:vue:2.5.16'
+    implementation 'org.webjars.bower:axios:0.17.1'
+    implementation 'org.webjars:sockjs-client:1.1.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    // websocket과 Stomp pub/sub를 이용하여 구현 -> pub.sub가 발생한 서버내에서만 메시지 주고받기 가능
+    // 즉 구독 대상인 채팅방 (topic)이 생성된 서버 안에서만 유요하므로 다른 서버로 접속한 클라이언트의 해당 채팅방에 보이지 않고
+    // 채팅방 구독도 불가능해짐
+    // 즉 -> 구독대산이 여러 서버에서 접근할 수 있도록 개선이 필요
+    // 요구조건을 해결하기 위해서 : 공통으로 사용할 수 있는 pub/sub 시스템을 구축하고 
+    // 모든 서버들이 해당 시스템을 통하여 pub/sub 메시지를 주고받도록 변경
+    // Embedded Redis를 사용하여 환경을 구축하기
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // SpringSecurity 및 Jxt 적용
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'javax.xml.bind:jaxb-api'
+
+	
+	// 그래들 5.0 이상 사용시    
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Embedded Redis를 사용하여 환경을 구축하기
+	compile('org.springframework.boot:spring-boot-starter-data-redis')
+	compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	
+
+}
+
+test {
+	useJUnitPlatform()
+}
